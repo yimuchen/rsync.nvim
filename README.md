@@ -38,7 +38,7 @@ At the base directory that you want to perform `rsync` operations, prepare a
 {
     "exclude": [ "list", "of", "path/patterns/to", "be/excluded", "from", "rsync"]
     "exclude_file": [ "files", "listing", "exclusion", "patterns", "suchas", "gitignore"],
-    remote : [
+    "remote" : [
         {
             "host": "name-of-ssh-host",
             "basedir": "/path/to/send/directory/to",
