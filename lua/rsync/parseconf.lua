@@ -72,6 +72,9 @@ end
 -- }
 M.rsync_config = function()
 	local base_dir = M.rsync_local_base()
+	if base_dir == nil then
+		return nil
+	end
 	local json_path = base_dir .. "/.rsync.json"
 	local json_table = vim.json.decode(io.open(json_path, "r"):read("*all"))
 	-- Preparing the main table
@@ -143,7 +146,7 @@ M.rsync_target_list = function()
 	for _, v in pairs(current_config.remote_hosts) do
 		table.insert(targets, v.name)
 	end
-  return targets
+	return targets
 end
 
 return M

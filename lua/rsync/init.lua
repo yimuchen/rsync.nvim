@@ -20,6 +20,9 @@ end
 
 local run_single = function(target_name, dry_run)
 	local rsync_config = M.parseconf.rsync_config()
+	if rsync_config == nil then
+		return
+	end
 	for _, target in pairs(rsync_config.remote_hosts) do
 		if target_name == target.name or target_name == "all" then
 			M.cmd.run_rsync_single(rsync_config.base_dir, target, dry_run)
@@ -73,6 +76,9 @@ M._setup_autocmd = function()
 	vim.api.nvim_create_autocmd("BufWritePost", {
 		callback = function(_)
 			local rsync_config = M.parseconf.rsync_config()
+			if rsync_config == nil then
+				return
+			end
 			for _, target in pairs(rsync_config.remote_hosts) do
 				if target.run_on_save then
 					M.cmd.run_rsync_single(rsync_config.base_dir, target, false)

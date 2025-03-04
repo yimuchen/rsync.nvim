@@ -31,12 +31,18 @@ M.make_rsync_cmds = function(local_base, remote_host_config)
 	end
 
 	local cmd = { M.settings.rsync }
-	for _, arg in pairs(M.settings.rsync_args) do
-		table.insert(cmd, arg)
-	end
+	vim.list_extend(cmd, M.settings.rsync_args)
 	vim.list_extend(cmd, exclude_tokens)
+	local cmd_exclude_file = {}
+	for _, file in pairs(remote_host_config.exclude_file) do
+		if vim.loop.fs_stat(file) ~= nil then
+			vim.list_extend(cmd_exclude_file, { file })
+		end
+	end
+	if next(cmd_exclude_file) ~= nil then
+		vim.list_extend(cmd, { "--exclude-from=" .. _joinstr(cmd_exclude_file, ",") })
+	end
 	vim.list_extend(cmd, {
-		"--exclude-from=" .. _joinstr(remote_host_config.exclude_file, ","),
 		local_base .. "/",
 		remote_host_config.host .. ":" .. remote_host_config.basedir,
 	})
